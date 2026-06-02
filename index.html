@@ -1,0 +1,2014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>OBISL Gamified Learning - Operations Management</title>
+  
+  <!-- Premium Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800;900&family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Sinhala:wght@400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <style>
+    :root {
+      --bg-primary: #050814;
+      --bg-secondary: #0b0f19;
+      --card-bg: #131a2e;
+      --accent-cyan: #06b6d4;
+      --accent-emerald: #10b981;
+      --accent-gold: #f59e0b;
+      --accent-red: #ef4444;
+    }
+    
+    body {
+      font-family: 'Noto Sans', 'Noto Sans Sinhala', sans-serif;
+      background-color: var(--bg-primary);
+      overflow-y: auto;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    .custom-scroll::-webkit-scrollbar {
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-track {
+      background: #0d1324;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #1e293b;
+      border-radius: 3px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb:hover {
+      background: var(--accent-cyan);
+    }
+
+    .pulse-glow {
+      animation: pulse 2s infinite alternate;
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 5px rgba(6, 182, 212, 0.4); }
+      100% { box-shadow: 0 0 20px rgba(6, 182, 212, 0.8); }
+    }
+
+    .gold-glow {
+      animation: gold-pulse 2s infinite alternate;
+    }
+    @keyframes gold-pulse {
+      0% { box-shadow: 0 0 8px rgba(245, 158, 11, 0.5); }
+      100% { box-shadow: 0 0 25px rgba(245, 158, 11, 0.9); }
+    }
+
+    .tab-active {
+      background: linear-gradient(135deg, rgba(6, 182, 212, 0.15), rgba(16, 185, 129, 0.15));
+      border-color: var(--accent-cyan);
+      color: #fff;
+    }
+  </style>
+</head>
+<body class="min-h-screen w-screen flex flex-col text-slate-100 custom-scroll">
+
+  <!-- ============================================================================ -->
+  <!-- 1. FIXED HEADER -->
+  <!-- ============================================================================ -->
+  <header class="h-[7vh] min-h-[50px] w-full bg-[#080d1a] border-b border-slate-800 flex items-center justify-between px-4 z-20 shadow-lg shrink-0">
+    <div class="flex items-center space-x-2">
+      <svg class="w-6 h-6 text-cyan-400 animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+      </svg>
+      <span id="headerTitle" class="font-bold text-sm md:text-base tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400">
+        OBISL Gamified Learning - Module 5
+      </span>
+    </div>
+    
+    <!-- Language Toggle -->
+    <div class="flex items-center space-x-2">
+      <span class="text-xs text-slate-400 hidden sm:inline">Language / භාෂාව:</span>
+      <button onclick="toggleLanguage()" class="flex items-center bg-[#131a30] border border-slate-700 px-3 py-1 rounded-full text-xs font-semibold hover:border-cyan-400 transition-colors duration-300 focus:outline-none">
+        <span id="langLabel" class="text-cyan-400">ENG</span>
+        <span class="mx-1 text-slate-500">|</span>
+        <span class="text-slate-400">සිංහල</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- ============================================================================ -->
+  <!-- 2. STICKY HUD PROGRESS BAR -->
+  <!-- ============================================================================ -->
+  <section class="bg-[#0b1021]/80 backdrop-blur border-b border-slate-800 py-2 px-4 flex flex-col md:flex-row items-center justify-between gap-2 z-10 shrink-0">
+    <div class="flex items-center space-x-2">
+      <span class="text-xs font-semibold text-slate-400">Global Mastery Progression:</span>
+      <div class="w-32 md:w-48 bg-slate-800 h-2.5 rounded-full overflow-hidden">
+        <div id="globalProgressBar" class="h-full bg-gradient-to-r from-cyan-500 to-emerald-500 transition-all duration-500" style="width: 0%;"></div>
+      </div>
+      <span id="globalProgressPercent" class="text-xs font-mono font-bold text-cyan-400">0%</span>
+    </div>
+
+    <!-- Active Indicators -->
+    <div class="flex items-center space-x-3 text-[11px] font-semibold text-slate-300">
+      <div class="flex items-center space-x-1">
+        <span id="hudS1" class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+        <span>ITO</span>
+      </div>
+      <div class="flex items-center space-x-1">
+        <span id="hudS2" class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+        <span>Little's</span>
+      </div>
+      <div class="flex items-center space-x-1">
+        <span id="hudS3" class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+        <span>PDCA</span>
+      </div>
+      <div class="flex items-center space-x-1">
+        <span id="hudS4" class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+        <span>JIT</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================================================ -->
+  <!-- 3. STEP SELECTOR NAVIGATION -->
+  <!-- ============================================================================ -->
+  <nav class="h-[5vh] min-h-[35px] w-full bg-[#090e1c] border-b border-slate-800 flex justify-around items-stretch z-10 shrink-0">
+    <button onclick="switchStep(1)" id="tab1" class="flex-1 flex items-center justify-center border-b-2 border-transparent text-[10px] md:text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all duration-300">
+      1. ITO Model
+    </button>
+    <button onclick="switchStep(2)" id="tab2" class="flex-1 flex items-center justify-center border-b-2 border-transparent text-[10px] md:text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all duration-300">
+      2. Little's Law
+    </button>
+    <button onclick="switchStep(3)" id="tab3" class="flex-1 flex items-center justify-center border-b-2 border-transparent text-[10px] md:text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all duration-300">
+      3. PDCA Cycle
+    </button>
+    <button onclick="switchStep(4)" id="tab4" class="flex-1 flex items-center justify-center border-b-2 border-transparent text-[10px] md:text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all duration-300">
+      4. JIT Kanban
+    </button>
+  </nav>
+
+  <!-- ============================================================================ -->
+  <!-- 4. ACTIVE CANVAS CONTAINER -->
+  <!-- ============================================================================ -->
+  <div class="h-[36vh] min-h-[220px] w-full relative bg-[#060912] border-b border-slate-800 flex items-center justify-center overflow-hidden shrink-0">
+    <canvas id="gameCanvas" class="w-full h-full block"></canvas>
+    
+    <!-- Floating Success Badge Overlay -->
+    <div id="canvasOverlayFeedback" class="absolute hidden flex flex-col items-center justify-center bg-black/85 inset-0 transition-all duration-500 pointer-events-none z-10">
+      <div class="bg-[#10b981]/20 border border-[#10b981] p-3 rounded-full animate-bounce mb-1">
+        <svg class="w-8 h-8 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <p id="canvasFeedbackText" class="text-emerald-400 font-bold text-center text-sm md:text-base px-4 tracking-wider uppercase drop-shadow-[0_2px_8px_rgba(16,185,129,0.5)]"></p>
+    </div>
+  </div>
+
+  <!-- ============================================================================ -->
+  <!-- 5. TASK DESCRIPTION / USER CONTROL DRAWER -->
+  <!-- ============================================================================ -->
+  <main class="flex-1 overflow-y-auto bg-[#0b0f19] p-4 min-h-[250px]">
+    <div class="max-w-4xl mx-auto h-full flex flex-col justify-between">
+      
+      <!-- ========================================== -->
+      <!-- CARD 1: ITO Model -->
+      <!-- ========================================== -->
+      <section id="card1" class="space-y-4">
+        <div>
+          <h2 id="card1Title" class="text-base md:text-lg font-bold text-cyan-400 flex items-center mb-1">
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs px-2 py-0.5 rounded mr-2">01</span>
+            Step 1: Input-Transformation-Output (ITO) Model
+          </h2>
+          <p id="card1Desc" class="text-xs text-slate-300 leading-relaxed mb-2">
+            Operations transform inputs into valuable outputs. Inputs consist of Transformed Resources (the materials, information, or customers being processed) and Transforming Resources (the staff and facilities that perform the transformation).
+          </p>
+          <div class="bg-blue-950/20 border border-blue-900/30 rounded p-2.5">
+            <p id="card1Task" class="text-xs text-amber-400 font-semibold flex items-center">
+              <svg class="w-4 h-4 mr-1.5 shrink-0 animate-pulse text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              TASK: Drag all 6 resources from the pool and drop them into their correct classification bays above.
+            </p>
+          </div>
+        </div>
+
+        <!-- Theory Expander 1 -->
+        <div class="border border-slate-800 rounded bg-[#0e1424]">
+          <button onclick="toggleExpander(1)" class="w-full px-3 py-2 flex justify-between items-center text-xs font-semibold text-slate-400 hover:text-white transition-colors duration-200 focus:outline-none">
+            <span id="expanderBtn1" class="flex items-center">
+              <svg class="w-4 h-4 mr-1.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+              Knowledge Expander & Core Theory
+            </span>
+            <svg id="expanderArrow1" class="w-4 h-4 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <div id="expanderPanel1" class="hidden p-3 border-t border-slate-800 max-h-32 overflow-y-auto custom-scroll text-slate-300 text-xs leading-relaxed space-y-2"></div>
+        </div>
+
+        <div class="flex items-center justify-end">
+          <button id="nextBtn1" disabled onclick="switchStep(2)" class="px-5 py-2 rounded font-bold text-xs bg-slate-800 text-slate-500 cursor-not-allowed transition-all duration-300 hover:scale-105 active:scale-95">
+            Next Step →
+          </button>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- CARD 2: Little's Law / Bottleneck -->
+      <!-- ========================================== -->
+      <section id="card2" class="space-y-4 hidden">
+        <div>
+          <h2 id="card2Title" class="text-base md:text-lg font-bold text-cyan-400 flex items-center mb-1">
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs px-2 py-0.5 rounded mr-2">02</span>
+            Step 2: Little's Law & Bottleneck Calibrator
+          </h2>
+          <p id="card2Desc" class="text-xs text-slate-300 leading-relaxed mb-2">
+            Little's Law states that Work-in-Progress (WIP) = Arrival Rate (λ) × Flow Time (W). A bottleneck occurs where a workstation's processing capacity is lower than the arrival rate, causing queues to explode and utilization to exceed 100%.
+          </p>
+          
+          <!-- Instructions Task Display Container (Added for consistent element resolution) -->
+          <div class="bg-blue-950/20 border border-blue-900/30 rounded p-2.5 mb-2">
+            <p id="card2Task" class="text-xs text-amber-400 font-semibold flex items-center">
+              <svg class="w-4 h-4 mr-1.5 shrink-0 animate-pulse text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              TASK: Calibrate the Input Rate and Sewing Capacity using the sliders to eliminate the bottleneck (Sewing capacity ≥ Input Rate) and maximize Sewing Station utilization (between 80% and 100%).
+            </p>
+          </div>
+
+          <!-- CALIBRATION SLIDERS -->
+          <div class="bg-[#12192b]/60 border border-slate-800 p-3 rounded space-y-3">
+            <div class="flex flex-col">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span id="sliderLabel1" class="text-slate-300 font-semibold">Input Arrival Rate (λ):</span>
+                <span id="sliderValue1" class="text-cyan-400 font-mono font-bold">25 units/hr</span>
+              </div>
+              <input type="range" id="inputArrivalRate" min="10" max="50" value="25" oninput="updateStep2Sliders()" class="w-full accent-cyan-400 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+            </div>
+
+            <div class="flex flex-col">
+              <div class="flex justify-between items-center text-xs mb-1">
+                <span id="sliderLabel2" class="text-slate-300 font-semibold">Sewing Station Capacity:</span>
+                <span id="sliderValue2" class="text-emerald-400 font-mono font-bold">20 units/hr</span>
+              </div>
+              <input type="range" id="sewingCapacity" min="15" max="60" value="20" oninput="updateStep2Sliders()" class="w-full accent-emerald-400 bg-slate-800 h-1.5 rounded-lg appearance-none cursor-pointer">
+            </div>
+            
+            <div class="flex justify-between items-center text-xs pt-1 border-t border-slate-800/50">
+              <span id="wipText" class="text-slate-400">Calculated WIP (Little's Law):</span>
+              <span id="calculatedWip" class="font-bold text-amber-400 font-mono">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Theory Expander 2 -->
+        <div class="border border-slate-800 rounded bg-[#0e1424]">
+          <button onclick="toggleExpander(2)" class="w-full px-3 py-2 flex justify-between items-center text-xs font-semibold text-slate-400 hover:text-white transition-colors duration-200 focus:outline-none">
+            <span id="expanderBtn2" class="flex items-center">
+              <svg class="w-4 h-4 mr-1.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+              Knowledge Expander & Core Theory
+            </span>
+            <svg id="expanderArrow2" class="w-4 h-4 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <div id="expanderPanel2" class="hidden p-3 border-t border-slate-800 max-h-32 overflow-y-auto custom-scroll text-slate-300 text-xs leading-relaxed space-y-2"></div>
+        </div>
+
+        <div class="flex items-center justify-end">
+          <button id="nextBtn2" disabled onclick="switchStep(3)" class="px-5 py-2 rounded font-bold text-xs bg-slate-800 text-slate-500 cursor-not-allowed transition-all duration-300 hover:scale-105 active:scale-95">
+            Next Step →
+          </button>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- CARD 3: Deming's PDCA Cycle -->
+      <!-- ========================================== -->
+      <section id="card3" class="space-y-4 hidden">
+        <div>
+          <h2 id="card3Title" class="text-base md:text-lg font-bold text-cyan-400 flex items-center mb-1">
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs px-2 py-0.5 rounded mr-2">03</span>
+            Step 3: Deming's PDCA Continuous Quality Cycle
+          </h2>
+          <p id="card3Desc" class="text-xs text-slate-300 leading-relaxed mb-2">
+            The Plan-Do-Check-Act (PDCA) cycle is a systematic four-step quality improvement framework. Continuous optimization requires completing the loop sequentially to achieve operational excellence.
+          </p>
+          <div class="bg-blue-950/20 border border-blue-900/30 rounded p-2.5">
+            <p id="card3Task" class="text-xs text-amber-400 font-semibold flex items-center">
+              <svg class="w-4 h-4 mr-1.5 shrink-0 animate-pulse text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              TASK: Drag and drop each phase of the PDCA cycle into its correct sequential order (1st to 4th Phase).
+            </p>
+          </div>
+        </div>
+
+        <!-- Theory Expander 3 -->
+        <div class="border border-slate-800 rounded bg-[#0e1424]">
+          <button onclick="toggleExpander(3)" class="w-full px-3 py-2 flex justify-between items-center text-xs font-semibold text-slate-400 hover:text-white transition-colors duration-200 focus:outline-none">
+            <span id="expanderBtn3" class="flex items-center">
+              <svg class="w-4 h-4 mr-1.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+              Knowledge Expander & Core Theory
+            </span>
+            <svg id="expanderArrow3" class="w-4 h-4 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <div id="expanderPanel3" class="hidden p-3 border-t border-slate-800 max-h-32 overflow-y-auto custom-scroll text-slate-300 text-xs leading-relaxed space-y-2"></div>
+        </div>
+
+        <div class="flex items-center justify-end">
+          <button id="nextBtn3" disabled onclick="switchStep(4)" class="px-5 py-2 rounded font-bold text-xs bg-slate-800 text-slate-500 cursor-not-allowed transition-all duration-300 hover:scale-105 active:scale-95">
+            Next Step →
+          </button>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- CARD 4: JIT Kanban Pull Simulator -->
+      <!-- ========================================== -->
+      <section id="card4" class="space-y-4 hidden">
+        <div>
+          <h2 id="card4Title" class="text-base md:text-lg font-bold text-cyan-400 flex items-center mb-1">
+            <span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs px-2 py-0.5 rounded mr-2">04</span>
+            Step 4: Just-In-Time (JIT) Kanban Pull Simulator
+          </h2>
+          <p id="card4Desc" class="text-xs text-slate-300 leading-relaxed mb-2">
+            Just-in-Time minimizes inventory storage by using a demand-driven <b>Pull System</b>. Production is only triggered by downstream customer purchases. Avoid overstocking (carrying costs) or running dry (stockouts)!
+          </p>
+
+          <!-- KANBAN CONTROL HUD -->
+          <div class="bg-[#12192b]/60 border border-slate-800 p-3 rounded flex flex-col items-center">
+            <div class="flex justify-between w-full text-xs font-semibold mb-2">
+              <span id="jitStreakLabel">Mastery Streak:</span>
+              <span id="jitStreakValue" class="text-amber-400 font-mono font-bold">0 / 10 Deliveries</span>
+            </div>
+
+            <!-- Glowing Tactile Pull Signal Button -->
+            <button onclick="triggerKanbanPull()" class="w-full py-3 px-4 rounded bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold text-sm tracking-wide shadow-md active:scale-95 transition-all focus:outline-none flex items-center justify-center space-x-2">
+              <span>📦</span>
+              <span id="kanbanBtnLabel">Trigger JIT Kanban Pull Signal</span>
+            </button>
+            
+            <p id="card4Task" class="text-[11px] text-amber-400 font-semibold mt-2.5 flex items-center">
+              <svg class="w-4 h-4 mr-1.5 shrink-0 animate-pulse text-amber-400" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path>
+              </svg>
+              <span>TASK: Synchronize orders! Pull 10 deliveries successfully without overstocking (>5 units on shelf) or stocking out!</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Theory Expander 4 -->
+        <div class="border border-slate-800 rounded bg-[#0e1424]">
+          <button onclick="toggleExpander(4)" class="w-full px-3 py-2 flex justify-between items-center text-xs font-semibold text-slate-400 hover:text-white transition-colors duration-200 focus:outline-none">
+            <span id="expanderBtn4" class="flex items-center">
+              <svg class="w-4 h-4 mr-1.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+              Knowledge Expander & Core Theory
+            </span>
+            <svg id="expanderArrow4" class="w-4 h-4 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+          </button>
+          <div id="expanderPanel4" class="hidden p-3 border-t border-slate-800 max-h-32 overflow-y-auto custom-scroll text-slate-300 text-xs leading-relaxed space-y-2"></div>
+        </div>
+
+        <div class="flex items-center justify-end">
+          <button id="nextBtn4" disabled onclick="displayProfessionalBadge()" class="px-5 py-2 rounded font-bold text-xs bg-slate-800 text-slate-500 cursor-not-allowed transition-all duration-300 hover:scale-105 active:scale-95 flex items-center gap-1.5">
+            <span>🏆</span><span id="nextBtn4Label">Claim Operations Mastery Badge</span>
+          </button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ============================================================================ -->
+  <!-- 6. INTELLECTUAL PROPERTY FOOTER -->
+  <!-- ============================================================================ -->
+  <footer class="h-[6vh] min-h-[40px] w-full bg-[#050810] border-t border-slate-900 flex items-center justify-center px-4 text-center z-20 shrink-0">
+    <span id="footerCredits" class="text-[10px] md:text-xs text-slate-500 tracking-wider font-semibold">
+      OBISL Campus | Concept by Michael Ranuka Gamage | CBMS Module 5
+    </span>
+  </footer>
+
+  <!-- ============================================================================ -->
+  <!-- 7. UNLOCKED MASTERY BADGE OVERLAY -->
+  <!-- ============================================================================ -->
+  <div id="badgeOverlayModal" class="fixed inset-0 bg-black/95 z-50 flex items-center justify-center p-4 transition-all duration-500 opacity-0 pointer-events-none overflow-y-auto custom-scroll">
+    <div class="bg-[#0b1021] border-2 border-amber-500/40 p-6 md:p-8 rounded-xl max-w-xl w-full text-center relative shadow-[0_0_50px_rgba(245,158,11,0.2)]">
+      
+      <!-- Close button -->
+      <button onclick="closeBadgeModal()" class="absolute top-4 right-4 text-slate-400 hover:text-white focus:outline-none">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+      </button>
+
+      <!-- Celebratory Text -->
+      <h2 id="congratsTitle" class="text-xl md:text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 via-yellow-300 to-amber-500 uppercase tracking-widest mb-1">
+        Mastery Badge Unlocked!
+      </h2>
+      <p id="congratsSubtitle" class="text-xs text-slate-400 mb-6">You have completed all 4 Module activities perfectly.</p>
+
+      <!-- Interactive Plaque Container -->
+      <div id="badgePlaque" class="bg-gradient-to-b from-[#111933] to-[#080d1a] border border-slate-800 rounded-lg p-6 relative overflow-hidden flex flex-col items-center">
+        <!-- Golden Corner Trims -->
+        <div class="absolute top-2 left-2 w-4 h-4 border-t-2 border-l-2 border-amber-500/50"></div>
+        <div class="absolute top-2 right-2 w-4 h-4 border-t-2 border-r-2 border-amber-500/50"></div>
+        <div class="absolute bottom-2 left-2 w-4 h-4 border-b-2 border-l-2 border-amber-500/50"></div>
+        <div class="absolute bottom-2 right-2 w-4 h-4 border-b-2 border-r-2 border-amber-500/50"></div>
+
+        <!-- 3D Gold Medal Graphic -->
+        <div class="relative w-28 h-28 flex items-center justify-center rounded-full bg-gradient-to-tr from-amber-600 via-yellow-400 to-amber-600 p-1.5 gold-glow mb-4 animate-bounce">
+          <div class="w-full h-full bg-[#0b1021] rounded-full flex flex-col items-center justify-center relative">
+            <span class="font-serif text-[11px] text-amber-400 font-bold tracking-widest uppercase">OBISL</span>
+            <svg class="w-10 h-10 text-amber-400 my-1.5" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path>
+            </svg>
+            <span class="text-[9px] text-amber-300 font-semibold tracking-wider font-mono uppercase">CBMS M5</span>
+          </div>
+        </div>
+
+        <h3 id="badgePlaqueTitle" class="font-serif text-lg md:text-xl font-bold text-amber-400 tracking-wider mb-1 uppercase">Operations Management</h3>
+        <p id="badgePlaqueSubtitle" class="text-[9px] text-slate-400 uppercase tracking-widest mb-4">Professional Mastery Digital Plaque</p>
+
+        <!-- Custom Player Name Input (Editable directly on Badge) -->
+        <div class="max-w-xs mx-auto mb-4 w-full">
+          <input type="text" id="badgeStudentName" placeholder="Type Your Full Name" class="bg-transparent border-b border-amber-500/30 text-center font-bold text-base text-white py-1 focus:outline-none focus:border-amber-400 w-full tracking-wide">
+        </div>
+
+        <p id="badgePlaqueDesc" class="text-[11px] text-slate-300 max-w-sm mx-auto leading-relaxed mb-4 text-center">
+          awarded for successfully completing the dynamic workflow simulations of Module 5: Operations Management under the CBMS framework.
+        </p>
+
+        <!-- Signature lines -->
+        <div class="flex justify-between items-end w-full pt-4 border-t border-slate-800">
+          <div class="text-left">
+            <span class="text-[8px] text-slate-500 block uppercase tracking-wider">Verification ID</span>
+            <span class="text-[9px] font-mono text-slate-300 font-bold">OB-OM5-MSTR</span>
+          </div>
+          <div class="text-right">
+            <span class="font-serif text-xs text-amber-300 block font-bold italic leading-none mb-1">M.R. Gamage</span>
+            <span id="badgeSigTitle" class="text-[8px] text-slate-500 block uppercase tracking-wider">Director / Head of Studies</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action buttons -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-2 mt-6">
+        <button onclick="printBadgePlaque()" class="px-5 py-2.5 rounded font-bold text-xs bg-amber-500 hover:bg-amber-600 text-slate-900 transition-all duration-200 shadow-lg flex items-center">
+          <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+          <span id="btnPrintBadge">Download Plaque File</span>
+        </button>
+        <button onclick="closeBadgeModal()" class="px-5 py-2.5 rounded font-bold text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 transition-all duration-200">
+          <span id="btnReturnSim">Return to Workspace</span>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ============================================================================ -->
+  <!-- 8. HIGH-PRECISION GAME ENGINE AND PHYSICS MODULE -->
+  <!-- ============================================================================ -->
+  <script>
+    // TECHNICAL CONFIGURATION & GLOBALS
+    let currentStep = 1;
+    let currentLang = 'ENG';
+    let canvas = null;
+    let ctx = null;
+
+    // Interaction trackers
+    let isDragging = false;
+    let dragNode = null;
+    let dragOffsetX = 0;
+    let dragOffsetY = 0;
+    let pointerX = 0;
+    let pointerY = 0;
+
+    // Global Completion States
+    let activitiesCompleted = {
+      step1: false,
+      step2: false,
+      step3: false,
+      step4: false
+    };
+
+    // Synthesizer Audio Context (Synthesized SFX to avoid cross-origin bugs)
+    let audioCtx = null;
+    function playSound(type) {
+      try {
+        if (!audioCtx) {
+          audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+        if (audioCtx.state === 'suspended') {
+          audioCtx.resume();
+        }
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'click') {
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(400, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(100, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.1);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.12);
+        } else if (type === 'correct') {
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(300, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(600, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.3);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.32);
+        } else if (type === 'error') {
+          osc.type = 'sawtooth';
+          osc.frequency.setValueAtTime(150, audioCtx.currentTime);
+          osc.frequency.exponentialRampToValueAtTime(50, audioCtx.currentTime + 0.2);
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          gain.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 0.22);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.25);
+        } else if (type === 'success') {
+          // Success Fanfare
+          const now = audioCtx.currentTime;
+          [261.63, 329.63, 392.00, 523.25].forEach((freq, idx) => {
+            const o = audioCtx.createOscillator();
+            const g = audioCtx.createGain();
+            o.connect(g);
+            g.connect(audioCtx.destination);
+            o.type = 'sine';
+            o.frequency.setValueAtTime(freq, now + idx * 0.08);
+            g.gain.setValueAtTime(0.1, now + idx * 0.08);
+            g.gain.linearRampToValueAtTime(0, now + idx * 0.08 + 0.4);
+            o.start(now + idx * 0.08);
+            o.stop(now + idx * 0.08 + 0.45);
+          });
+        }
+      } catch (err) {
+        console.debug("Audio play failed: ", err);
+      }
+    }
+
+    // STATE FOR STEP 1: Input-Transformation-Output Engine
+    let step1Items = [];
+    let step1Bays = [];
+
+    // STATE FOR STEP 2: Little's Law / Bottleneck
+    let step2ArrivalRate = 25; 
+    let step2SewingCapacity = 20; 
+    const step2CuttingCapacity = 45; 
+    const step2PackingCapacity = 40; 
+    let step2WipVal = "--"; 
+    let step2ConveyorParticles = [];
+    let step2Stations = [];
+
+    // STATE FOR STEP 3: Deming PDCA Cycle
+    let step3Slots = [];
+    let step3Cards = [];
+
+    // STATE FOR STEP 4: Just-In-Time (JIT) Kanban Pull Simulator
+    let step4Inventory = 0;
+    let step4Deliveries = 0;
+    const step4MaxInventory = 5;
+    const step4TargetDeliveries = 10;
+    let step4Customers = [];
+    let step4ConveyorUnits = [];
+    let step4StockoutTimer = 0;
+    let step4OverstockTimer = 0;
+    let step4CustomerSpawnTimer = 0;
+
+    // Vector Particle Systems for Rewards
+    let successParticles = [];
+
+    // ============================================================================
+    // BILINGUAL DICTIONARY
+    // ============================================================================
+    const translations = {
+      ENG: {
+        headerTitle: "OBISL Gamified Learning - Operations Management",
+        tab1: "1. ITO Model",
+        tab2: "2. Little's Law",
+        tab3: "3. PDCA Cycle",
+        tab4: "4. JIT Kanban",
+
+        card1Title: "Step 1: Input-Transformation-Output (ITO) Model",
+        card1Desc: "Operations transform inputs into valuable outputs. Inputs consist of Transformed Resources (the materials, information, or customers being processed) and Transforming Resources (the staff and facilities that perform the transformation).",
+        card1Task: "TASK: Drag all 6 resources from the pool and drop them into their correct classification bays above.",
+        step1BayLeft: "Transformed Resources",
+        step1BayRight: "Transforming Resources",
+        step1Success: "Correct classification! Operations architecture completed. Proceed to Step 2.",
+
+        card2Title: "Step 2: Little's Law & Bottleneck Calibrator",
+        card2Desc: "Little's Law states that Work-in-Progress (WIP) = Arrival Rate (λ) × Flow Time (W). A bottleneck occurs where a workstation's processing capacity is lower than the arrival rate, causing queues to explode and utilization to exceed 100%.",
+        card2Task: "TASK: Calibrate the Input Rate and Sewing Capacity using the sliders to eliminate the bottleneck (Sewing capacity ≥ Input Rate) and maximize Sewing Station utilization (between 80% and 100%).",
+        sliderLabel1: "Input Arrival Rate (λ):",
+        sliderLabel2: "Sewing Station Capacity:",
+        wipText: "Calculated WIP (Little's Law):",
+        step2Success: "Optimal balanced flow achieved! Bottleneck resolved.",
+
+        card3Title: "Step 3: Deming's PDCA Continuous Quality Cycle",
+        card3Desc: "The Plan-Do-Check-Act (PDCA) cycle is a systematic four-step quality improvement framework. Continuous optimization requires completing the loop sequentially to achieve operational excellence.",
+        card3Task: "TASK: Drag and drop each phase of the PDCA cycle into its correct sequential order (1st to 4th Phase).",
+        step3Success: "Deming Cycle synced! Quality loop is active. Prepare for Step 4.",
+
+        card4Title: "Step 4: Just-In-Time (JIT) Kanban Pull Simulator",
+        card4Desc: "Just-In-Time minimizes inventory storage by using a demand-driven Pull System. Production is only triggered by downstream customer purchases. Avoid overstocking (carrying costs) or running dry (stockouts)!",
+        card4Task: "TASK: Synchronize orders! Pull 10 deliveries successfully without overstocking (>5 units on shelf) or stocking out!",
+        jitStreakLabel: "Mastery Streak:",
+        jitStreakValue: "0 / 10 Deliveries",
+        kanbanBtnLabel: "Trigger JIT Kanban Pull Signal",
+        nextBtn4Label: "Claim Operations Mastery Badge",
+        step4Success: "Perfect JIT synchronization! You have mastered Lean principles.",
+
+        knowledgeExpander: "Knowledge Expander & Core Theory",
+        hideExpander: "Hide Theoretical Deep-Dive",
+        sortingPool: "DRAG RESOURCES FROM HERE",
+        correct: "CORRECT!",
+        incorrect: "TRY AGAIN",
+        bottleneckAlert: "BOTTLENECK DETECTED!",
+        optimalFlow: "OPTIMAL FLOW STATUS",
+        wipLabel: "Current WIP",
+        utilizationLabel: "Utilization",
+        stationALabel: "Cutting (45/hr)",
+        stationBLabel: "Sewing",
+        stationCLabel: "Packing (40/hr)",
+
+        congratsTitle: "Mastery Badge Unlocked!",
+        congratsSubtitle: "You have completed all 4 Module activities perfectly.",
+        badgePlaqueTitle: "Operations Management",
+        badgePlaqueSubtitle: "Professional Mastery Digital Plaque",
+        badgePlaqueDesc: "awarded for successfully completing the dynamic workflow simulations of Module 5: Operations Management under the CBMS framework.",
+        btnPrintBadge: "Download Plaque File",
+        btnReturnSim: "Return to Workspace",
+
+        theory1: "<h4><b>The Input-Transformation-Output Model</b></h4><p>Every business operation transforms inputs into outputs. <b>Transformed resources</b> are processed: Materials (physical transformation), Information (informational transformation), or Customers (psychological/locational transformation). <b>Transforming resources</b> are the active agents: Facilities (buildings, machinery) and Staff (labor, operational talent).</p>",
+        theory2: "<h4><b>Little's Law & Bottleneck Engineering</b></h4><p>Formulated by John Little: <b>WIP = Throughput Rate (λ) × Flow Time (W)</b>.</p><p>When capacity utilization (λ / Capacity) exceeds 100%, queue size increases infinitely, creating severe bottlenecks. Process engineering focuses on aligning stage capacities with input arrival rates to maximize throughput and minimize waste.</p>",
+        theory3: "<h4><b>Deming's PDCA Continuous Improvement Cycle</b></h4><p><b>Plan:</b> Define current state, collect baseline data, formulate hypothesis.<br><b>Do:</b> Implement changes on a small-scale pilot.<br><b>Check:</b> Compare results against objectives to verify hypotheses.<br><b>Act:</b> Standardize effective practices or pivot if goals are unmet.</p>",
+        theory4: "<h4><b>Just-in-Time (JIT) & Kanban Pull Systems</b></h4><p>In contrast to <b>'Push' scheduling</b> where parts are forced through stages based on rigid long-range forecasts, <b>JIT 'Pull' environments</b> synchronize material flows directly with consumption. Downstream workstations signal upstream supply chains only when an item is consumed. Kanban cards or visual bins serve as physical authorizations to prevent inventory inflation (a severe form of Muda).</p>"
+      },
+      SIN: {
+        headerTitle: "OBISL සන්නාමකරණය කළ ඉගෙනුම - මෙහෙයුම් කළමනාකරණය",
+        tab1: "1. ITO ආකෘතිය",
+        tab2: "2. ලිට්ල්ගේ නීතිය",
+        tab3: "3. PDCA චක්‍රය",
+        tab4: "4. JIT Kanban",
+
+        card1Title: "පියවර 1: ආදාන-පරිවර්තන-ප්‍රතිදාන (ITO) ආකෘතිය",
+        card1Desc: "මෙහෙයුම් මඟින් ආදානයන් උසස් අගයකින් යුත් ප්‍රතිදානයන් බවට පරිවර්තනය කරයි. ආදාන වර්ග දෙකකි: පරිවර්තනය වන සම්පත් (ද්‍රව්‍ය, තොරතුරු හෝ පාරිභෝගිකයින්) සහ පරිවර්තනය කරන සම්පත් (සේවකයින් සහ පහසුකම්).",
+        card1Task: "කාර්යය: පහත දැක්වෙන සම්පත් 6 නිවැරදි කාණ්ඩයට අනුරූපව ඉහළින් ඇති කොටුවලට ඇද දමන්න (Drag and Drop).",
+        step1BayLeft: "පරිවර්තනය වන සම්පත්",
+        step1BayRight: "පරිවර්තනය කරන සම්පත්",
+        step1Success: "නිවැරදි වර්ගීකරණයකි! මෙහෙයුම් ව්‍යුහය සම්පූර්ණයි. පියවර 2 වෙත යන්න.",
+
+        card2Title: "පියවර 2: ලිට්ල්ගේ නීතිය සහ අවහිරතා සමනය කිරීම",
+        card2Desc: "ලිට්ල්ගේ නීතියට අනුව, ක්‍රියාවලියේ පවතින වැඩ ප්‍රමාණය (WIP) = පැමිණීමේ වේගය (λ) × සැකසුම් කාලය (W). යම් වැඩපොළක ධාරිතාවය පැමිණීමේ වේගයට වඩා අඩු වූ විට, එතැන 'අවහිරතාවයක්' (Bottleneck) නිර්මාණය වන අතර එහි උපයෝජනය 100% ඉක්මවයි.",
+        card2Task: "කාර්යය: පහත ස්ලයිඩර් මඟින් ආදාන වේගය සහ මැසීමේ අංශයේ ධාරිතාවය සකසා අවහිරතා ඉවත් කර උපයෝජනය ප්‍රශස්ත කරන්න (80% - 100% අතර).",
+        sliderLabel1: "ආදාන පැමිණීමේ වේගය (λ):",
+        sliderLabel2: "මැසීමේ අංශයේ ධාරිතාවය:",
+        wipText: "ගණනය කළ වැඩ ප්‍රමාණය (Little's Law WIP):",
+        step2Success: "ප්‍රශස්ත ප්‍රවාහය ළඟා කර ගත්තා! අවහිරතා නිරාකරණය කර ඇත.",
+
+        card3Title: "පියවර 3: ඩෙමින්ගේ PDCA අඛණ්ඩ තත්ත්ව වැඩිදියුණු කිරීම් චක්‍රය",
+        card3Desc: "Plan-Do-Check-Act (PDCA) චක්‍රය යනු තත්ත්ව වැඩිදියුණු කිරීම සඳහා භාවිත කරන පියවර හතරක පද්ධතිමය රාමුවකි. අඛණ්ඩ ප්‍රශස්තකරණය සඳහා මෙම පියවර අනුපිළිවෙලින් සම්පූර්ණ කළ යුතුය.",
+        card3Task: "කාර්යය: PDCA චක්‍රයේ එක් එක් පියවර එහි නිවැරදි අනුපිළිවෙලට අනුව (1 සිට 4 දක්වා) ඇද දන්න.",
+        step3Success: "ඩෙමින් චක්‍රය සක්‍රීයයි! තත්ත්ව පාලන වළල්ල නිවැරදියි. පියවර 4 වෙත යන්න.",
+
+        card4Title: "පියවර 4: Just-In-Time (JIT) Kanban Pull Simulator",
+        card4Desc: "නිසි වේලාවට වැඩ කිරීම (JIT) යනු පාරිභෝගික ඇණවුම් මගින් පමණක් නිෂ්පාදනය ආරම්භ කරන ඇද ගැනීමේ පද්ධතියකි. මෙහිදී තොග ගබඩා කිරීම අවම කරමින් අවශ්‍ය ප්‍රමාණය පමණක් නිසි වේලාවට නිපදවයි. Kanban කාඩ්පත් හෝ විද්‍යුත් සංඥා මගින් පහළ ධාරාවේ සිට ඉහළ ධාරාවට අමුද්‍රව්‍ය අවශ්‍යතාවය සන්නිවේදනය කරයි.",
+        card4Task: "කාර්යය: පාරිභෝගිකයින් පැමිණෙන විට පමණක් Kanban Pull Signal ක්‍රියාත්මක කරන්න. අතිරික්ත ගබඩා කිරීමකින් තොරව සාර්ථක ඇණවුම් 10ක් බෙදාහරින්න්න!",
+        jitStreakLabel: "සාර්ථක බෙදාහැරීම්:",
+        jitStreakValue: "0 / 10 බෙදාහැරීම්",
+        kanbanBtnLabel: "Kanban Pull Signal ක්‍රියාත්මක කරන්න",
+        nextBtn4Label: "Operations Mastery ලාංඡනය ලබා ගන්න",
+        step4Success: "විශිෂ්ටයි! ඔබ සාර්ථකව JIT සහ Kanban පද්ධතිය ක්‍රියාත්මක කර ඇත.",
+
+        knowledgeExpander: "න්‍යායාත්මක විශ්ලේෂණය සහ මූලධර්ම",
+        hideExpander: "න්‍යායාත්මක කරුණු සඟවන්න",
+        sortingPool: "සම්පත් මෙතැනින් ඇද දමන්න",
+        correct: "නිවැරදියි!",
+        incorrect: "නැවත උත්සාහ කරන්න",
+        bottleneckAlert: "අවහිරතාවයක් හඳුනාගැනිණි!",
+        optimalFlow: "ප්‍රශස්ත ප්‍රවාහ තත්ත්වය",
+        wipLabel: "වත්මන් වැඩ ප්‍රමාණය",
+        utilizationLabel: "උපයෝජනය",
+        stationALabel: "කැපීම (45/පැයට)",
+        stationBLabel: "මැසීම",
+        stationCLabel: "ඇසුරුම් (40/පැයට)",
+
+        congratsTitle: "ප්‍රවීණතා ලාංඡනය ලබා ගන්න ලදී!",
+        congratsSubtitle: "ඔබ ක්‍රියාකාරකම් 4 ම සාර්ථකව අවසන් කර ඇත.",
+        badgePlaqueTitle: "Operations Management",
+        badgePlaqueSubtitle: "ප්‍රවීණතා ඩිජිටල් සමරු ඵලකය",
+        badgePlaqueDesc: "මෙහෙයුම් කළමනාකරණයේ සියලුම ප්‍රධාන නිපුණතාවයන් සහ ක්‍රීඩාශීලී පුහුණු පාඨමාලාව සාර්ථකව නිමකිරීම වෙනුවෙන් පිරිනමන ලාංඡනයයි.",
+        btnPrintBadge: "සමරු ඵලකය සුරකින්න",
+        btnReturnSim: "නැවත වැඩබිමට යන්න",
+
+        theory1: "<h4><b>ආදාන-පරිවර්තන-ප්‍රතිදාන ආකෘතිය</b></h4><p>සෑම ව්‍යාපාරික මෙහෙයුමකදීම ආදානයන් නිමවූ ප්‍රතිදානයන් බවට පත්කරයි. <b>පරිවර්තනය වන සම්පත් (Transformed resources)</b> යනු සැකසීමට ලක්වන ද්‍රව්‍ය (භෞතික පරිවර්තනය), තොරතුරු (දත්ත සැකසීම) හෝ පාරිභෝගිකයින් (සේවා සැපයීම) වේ. <b>පරිවර්තනය කරන සම්පත් (Transforming resources)</b> යනු පරිවර්තනය සිදුකිරීමට දායක වන පහසුකම් (ගොඩනැගිලි, උපකරණ) සහ සේවක පිරිස වේ.</p>",
+        theory2: "<h4><b>ලිට්ල්ගේ නීතිය සහ අවහිරතා ඉංජිනේරු විද්‍යාව</b></h4><p>ලිට්ල්ගේ නීතිය: <b>WIP = ධාරිතා වේගය (λ) × ගලායාමේ කාලය (W)</b>.</p><p>ධාරිතා උපයෝජනය (λ / ධාරිතාවය) 100% ඉක්මවන විට, වැඩපොළ ඉදිරිපිට පෝලිම අසීමිත ලෙස වර්ධනය වී 'අවහිරතාවයක්' නිර්මාණය වේ. මෙහෙයුම් කළමනාකරණයේ ප්‍රධාන ඉලක්කයක් වන්නේ මෙම ධාරිතාවයන් සමතුලිත කර නාස්තිය අවම කිරීමයි.</p>",
+        theory3: "<h4><b>ඩෙමින්ගේ PDCA අඛණ්ඩ වැඩිදියුණු කිරීමේ චක්‍රය</b></h4><p><b>Plan (සැලසුම් කිරීම):</b> පවතින ගැටලුව හඳුනාගෙන, විසඳුම් සහ අරමුණු සැලසුම් කිරීම.<br><b>Do (ක්‍රියාත්මක කිරීම):</b> සැලසුම් කළ වෙනස්කම් කුඩා නියමු ව්‍යාපෘතියක් ලෙස ක්‍රියාත්මක කිරීම.<br><b>Check (පරීක්ෂා කිරීම):</b> ප්‍රතිඵල මැන බලා අරමුණු ඉටුවී ඇත්දැයි පරීක්ෂා කිරීම.<br><b>Act (ප්‍රතිචාර දැක්වීම):</b> සාර්ථක විසඳුම් සම්මත කාර්ය පටිපාටි ලෙස ස්ථිර කිරීම හෝ නැවත සැලසුම් කිරීම.</p>",
+        theory4: "<h4><b>නිසි වේලාවට වැඩ කිරීම (JIT) සහ Kanban ඇද ගැනීමේ පද්ධති</b></h4><p>JIT යනු පාරිභෝගික ඉල්ලුම සමඟ සෘජුව ගැලපෙන සැපයුම් දාම උපායකි. මෙහිදී තොග ගබඩා කිරීම අවම කරමින් අවශ්‍ය ප්‍රමාණය පමණක් නිසි වේලාවට නිපදවයි. Kanban කාඩ්පත් හෝ විද්‍යුත් සංඥා මගින් පහළ ධාරාවේ සිට ඉහළ ධාරාවට අමුද්‍රව්‍ය අවශ්‍යතාවය සන්නිවේදනය කරයි.</p>"
+      }
+    };
+
+    // ============================================================================
+    // DYNAMIC LAYOUT & DRAWING COORDINATION
+    // ============================================================================
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * window.devicePixelRatio;
+      canvas.height = rect.height * window.devicePixelRatio;
+      ctx.scale(window.devicePixelRatio, window.devicePixelRatio);
+      
+      initStep1();
+      initStep2();
+      initStep3();
+      initStep4();
+    }
+
+    function getPointerPos(e) {
+      const rect = canvas.getBoundingClientRect();
+      let clientX, clientY;
+      if (e.touches && e.touches.length > 0) {
+        clientX = e.touches[0].clientX;
+        clientY = e.touches[0].clientY;
+      } else {
+        clientX = e.clientX;
+        clientY = e.clientY;
+      }
+      return {
+        x: (clientX - rect.left) * (rect.width / canvas.clientWidth),
+        y: (clientY - rect.top) * (rect.height / canvas.clientHeight)
+      };
+    }
+
+    // ============================================================================
+    // LEVEL INITIALIZATIONS
+    // ============================================================================
+    function initStep1() {
+      if (!canvas || currentStep !== 1) return;
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+
+      const itemRadius = Math.min(w * 0.05, 32);
+      
+      // Clear drag nodes
+      isDragging = false;
+      dragNode = null;
+
+      step1Bays = [
+        { id: 'transformed', x: w * 0.06, y: h * 0.12, w: w * 0.40, h: h * 0.45, color: '#06b6d4' },
+        { id: 'transforming', x: w * 0.54, y: h * 0.12, w: w * 0.40, h: h * 0.45, color: '#10b981' }
+      ];
+
+      const poolData = [
+        { id: 1, cat: 'transformed', nameEN: 'Raw Fabric', nameSI: 'අමු රෙදිපිළි' },
+        { id: 2, cat: 'transformed', nameEN: 'Design Spec', nameSI: 'නිර්මාණ දත්ත' },
+        { id: 3, cat: 'transformed', nameEN: 'Shoppers', nameSI: 'පාරිභෝගිකයන්' },
+        { id: 4, cat: 'transforming', nameEN: 'Sewing Crew', nameSI: 'මැහුම් ශිල්පීන්' },
+        { id: 5, cat: 'transforming', nameEN: 'Sewing Machine', nameSI: 'මහන මැෂිම' },
+        { id: 6, cat: 'transforming', nameEN: 'Workshop', nameSI: 'වැඩබිම' }
+      ];
+
+      const poolPositions = [
+        { x: w * 0.15, y: h * 0.78 },
+        { x: w * 0.29, y: h * 0.78 },
+        { x: w * 0.43, y: h * 0.78 },
+        { x: w * 0.57, y: h * 0.78 },
+        { x: w * 0.71, y: h * 0.78 },
+        { x: w * 0.85, y: h * 0.78 }
+      ];
+
+      // Shuffle placements to avoid static memorization
+      const shuffleIndices = [2, 0, 5, 1, 4, 3];
+
+      step1Items = poolData.map((d, i) => {
+        const p = poolPositions[shuffleIndices[i]];
+        return {
+          ...d,
+          x: p.x,
+          y: p.y,
+          origX: p.x,
+          origY: p.y,
+          radius: itemRadius,
+          isPlaced: false,
+          placedInBay: null,
+          shakeTimer: 0
+        };
+      });
+    }
+
+    function initStep2() {
+      if (!canvas || currentStep !== 2) return;
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+
+      step2ConveyorParticles = [];
+      
+      step2Stations = [
+        { id: 'cutting', nameEN: 'Cutting', x: w * 0.28, y: h * 0.55, w: w * 0.14, h: h * 0.35, capacity: step2CuttingCapacity },
+        { id: 'sewing', nameEN: 'Sewing', x: w * 0.50, y: h * 0.55, w: w * 0.14, h: h * 0.35, capacity: step2SewingCapacity },
+        { id: 'packing', nameEN: 'Packing', x: w * 0.72, y: h * 0.55, w: w * 0.14, h: h * 0.35, capacity: step2PackingCapacity }
+      ];
+
+      updateStep2Sliders();
+    }
+
+    function initStep3() {
+      if (!canvas || currentStep !== 3) return;
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+
+      step3Slots = [
+        { phase: 1, nameEN: "1. PLAN", nameSI: "1. සැලසුම් කරන්න", x: w * 0.15, y: h * 0.35, r: Math.min(w * 0.07, 35) },
+        { phase: 2, nameEN: "2. DO", nameSI: "2. ක්‍රියා කරන්න", x: w * 0.38, y: h * 0.35, r: Math.min(w * 0.07, 35) },
+        { phase: 3, nameEN: "3. CHECK", nameSI: "3. පරීක්ෂා කරන්න", x: w * 0.62, y: h * 0.35, r: Math.min(w * 0.07, 35) },
+        { phase: 4, nameEN: "4. ACT", nameSI: "4. ප්‍රතියෝජනය කරන්න", x: w * 0.85, y: h * 0.35, r: Math.min(w * 0.07, 35) }
+      ];
+
+      const rawCards = [
+        { phase: 1, textEN: "Formulate hypothesis & goals", textSI: "අරමුණු සහ වෙනස්කම් සැලසුම් කිරීම" },
+        { phase: 2, textEN: "Implement pilot operations", textSI: "කුඩා පරිමාණයෙන් ක්‍රියාත්මක කිරීම" },
+        { phase: 3, textEN: "Analyze metrics & outcomes", textSI: "ප්‍රතිඵල විශ්ලේෂණය සහ මැන බැලීම" },
+        { phase: 4, textEN: "Standardize process loop", textSI: "සාර්ථක ක්‍රමවේදයන් ස්ථිර කිරීම" }
+      ];
+
+      const poolPositions = [
+        { x: w * 0.18, y: h * 0.78 },
+        { x: w * 0.39, y: h * 0.78 },
+        { x: w * 0.61, y: h * 0.78 },
+        { x: w * 0.82, y: h * 0.78 }
+      ];
+      
+      const shuffleIndices = [2, 0, 3, 1]; 
+
+      step3Cards = rawCards.map((rc, idx) => {
+        const p = poolPositions[shuffleIndices[idx]];
+        return {
+          ...rc,
+          x: p.x,
+          y: p.y,
+          origX: p.x,
+          origY: p.y,
+          w: w * 0.18,
+          h: h * 0.22,
+          isPlaced: false,
+          placedInSlot: null,
+          shakeTimer: 0
+        };
+      });
+    }
+
+    function initStep4() {
+      if (!canvas || currentStep !== 4) return;
+      step4Inventory = 0;
+      step4Deliveries = 0;
+      step4Customers = [];
+      step4ConveyorUnits = [];
+      step4StockoutTimer = 0;
+      step4OverstockTimer = 0;
+      step4CustomerSpawnTimer = 0;
+      
+      updateStep4UI();
+    }
+
+    // ============================================================================
+    // CONTROLLER & UI COUPLINGS
+    // ============================================================================
+    function switchStep(step) {
+      playSound('click');
+      currentStep = step;
+
+      // Hide all descriptions, show active
+      document.getElementById('card1').classList.add('hidden');
+      document.getElementById('card2').classList.add('hidden');
+      document.getElementById('card3').classList.add('hidden');
+      document.getElementById('card4').classList.add('hidden');
+      document.getElementById(`card${step}`).classList.remove('hidden');
+
+      // Update Navigation Tab Selection Styling
+      for (let i = 1; i <= 4; i++) {
+        document.getElementById(`tab${i}`).className = "flex-1 flex items-center justify-center border-b-2 border-transparent text-[10px] md:text-xs font-semibold text-slate-400 hover:text-slate-200 transition-all duration-300";
+      }
+      document.getElementById(`tab${step}`).className = "flex-1 flex items-center justify-center border-b-2 border-slate-800 text-[10px] md:text-xs font-semibold text-slate-100 tab-active transition-all duration-300";
+
+      // Reset overlay
+      document.getElementById('canvasOverlayFeedback').classList.add('hidden');
+
+      // Initialize requested step states
+      initStep1();
+      initStep2();
+      initStep3();
+      initStep4();
+    }
+
+    function toggleLanguage() {
+      playSound('click');
+      currentLang = currentLang === 'ENG' ? 'SIN' : 'ENG';
+      
+      // Safe element text setter with guard check
+      const setElementText = (id, text) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = text;
+      };
+
+      const setElementHTML = (id, html) => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = html;
+      };
+
+      setElementText('langLabel', currentLang);
+
+      // Global Header Credits Translation
+      const curDict = translations[currentLang];
+      setElementText('headerTitle', curDict.headerTitle);
+      setElementText('footerCredits', curDict.footerCredits || "OBISL Campus | CBMS Module 5");
+
+      // Active tab translations
+      for (let i = 1; i <= 4; i++) {
+        setElementText(`tab${i}`, curDict[`tab${i}`]);
+      }
+
+      // Step Cards Translate Update
+      for (let s = 1; s <= 4; s++) {
+        setElementHTML(`card${s}Title`, `<span class="bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 text-xs px-2 py-0.5 rounded mr-2">0${s}</span> ${curDict[`card${s}Title`]}`);
+        setElementText(`card${s}Desc`, curDict[`card${s}Desc`]);
+        setElementText(`card${s}Task`, curDict[`card${s}Task`]);
+        setElementHTML(`expanderBtn${s}`, `
+          <svg class="w-4 h-4 mr-1.5 text-cyan-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+          ${curDict.knowledgeExpander}
+        `);
+        setElementHTML(`expanderPanel${s}`, curDict[`theory${s}`]);
+      }
+
+      // Slider Translations (Step 2)
+      setElementText('sliderLabel1', curDict.sliderLabel1);
+      setElementText('sliderLabel2', curDict.sliderLabel2);
+      setElementText('wipText', curDict.wipText);
+
+      // Step 4 Translations
+      setElementText('jitStreakLabel', curDict.jitStreakLabel);
+      setElementText('kanbanBtnLabel', curDict.kanbanBtnLabel);
+      setElementText('nextBtn4Label', curDict.nextBtn4Label);
+
+      // Plaque translations
+      setElementText('congratsTitle', curDict.congratsTitle);
+      setElementText('congratsSubtitle', curDict.congratsSubtitle);
+      setElementText('badgePlaqueTitle', curDict.badgePlaqueTitle);
+      setElementText('badgePlaqueSubtitle', curDict.badgePlaqueSubtitle);
+      setElementText('badgePlaqueDesc', curDict.badgePlaqueDesc);
+      setElementText('btnPrintBadge', curDict.btnPrintBadge);
+      setElementText('btnReturnSim', curDict.btnReturnSim);
+
+      updateStep2Sliders();
+      updateStep4UI();
+    }
+
+    function toggleExpander(num) {
+      playSound('click');
+      const panel = document.getElementById(`expanderPanel${num}`);
+      const arrow = document.getElementById(`expanderArrow${num}`);
+
+      if (panel && panel.classList.contains('hidden')) {
+        panel.classList.remove('hidden');
+        if (arrow) arrow.classList.add('rotate-180');
+        panel.innerHTML = translations[currentLang][`theory${num}`];
+      } else if (panel) {
+        panel.classList.add('hidden');
+        if (arrow) arrow.classList.remove('rotate-180');
+      }
+    }
+
+    // ============================================================================
+    // STEP 1 INTERACTIVE EVALUATOR
+    // ============================================================================
+    function checkStep1Completion() {
+      const allCorrect = step1Items.every(item => item.isPlaced && item.placedInBay === item.cat);
+      if (allCorrect && !activitiesCompleted.step1) {
+        activitiesCompleted.step1 = true;
+        playSound('success');
+        triggerRewardAnimation(translations[currentLang].step1Success);
+        
+        const btn = document.getElementById('nextBtn1');
+        if (btn) {
+          btn.removeAttribute('disabled');
+          btn.className = "px-5 py-2 rounded font-bold text-xs bg-emerald-500 hover:bg-emerald-600 text-slate-950 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.5)] cursor-pointer";
+        }
+        updateGlobalHUD();
+      }
+    }
+
+    // ============================================================================
+    // STEP 2 METRICS EVALUATOR
+    // ============================================================================
+    function updateStep2Sliders() {
+      const inputEl = document.getElementById('inputArrivalRate');
+      const sewingEl = document.getElementById('sewingCapacity');
+      if (!inputEl || !sewingEl) return;
+
+      step2ArrivalRate = parseInt(inputEl.value);
+      step2SewingCapacity = parseInt(sewingEl.value);
+
+      const val1 = document.getElementById('sliderValue1');
+      if (val1) val1.innerText = `${step2ArrivalRate} units/hr`;
+      const val2 = document.getElementById('sliderValue2');
+      if (val2) val2.innerText = `${step2SewingCapacity} units/hr`;
+
+      if (step2Stations.length > 1) {
+        step2Stations[1].capacity = step2SewingCapacity;
+      }
+
+      const bottleneckSewing = (step2ArrivalRate > step2SewingCapacity);
+      const bottleneckPacking = (step2ArrivalRate > step2PackingCapacity);
+
+      // System WIP = Output Rate * Flow Time
+      let flowTimeSewing = 1 / step2SewingCapacity;
+      let flowTimeCutting = 1 / step2CuttingCapacity;
+      let flowTimePacking = 1 / step2PackingCapacity;
+
+      let theoreticalWIP = step2ArrivalRate * (flowTimeCutting + flowTimeSewing + flowTimePacking);
+      
+      if (bottleneckSewing) {
+        theoreticalWIP += (step2ArrivalRate - step2SewingCapacity) * 5; 
+      }
+      if (bottleneckPacking) {
+        theoreticalWIP += (step2ArrivalRate - step2PackingCapacity) * 4;
+      }
+
+      step2WipVal = theoreticalWIP.toFixed(2);
+      const wipEl = document.getElementById('calculatedWip');
+      if (wipEl) wipEl.innerText = `${step2WipVal} units`;
+
+      const utilization = (step2ArrivalRate / step2SewingCapacity);
+      
+      const btn = document.getElementById('nextBtn2');
+      // OPTIMAL CONDITIONS: No bottleneck and Sewing Station utilization at 80-100%
+      if (!bottleneckSewing && !bottleneckPacking && utilization >= 0.80 && utilization <= 1.00) {
+        if (!activitiesCompleted.step2) {
+          activitiesCompleted.step2 = true;
+          playSound('success');
+          triggerRewardAnimation(translations[currentLang].step2Success);
+          
+          if (btn) {
+            btn.removeAttribute('disabled');
+            btn.className = "px-5 py-2 rounded font-bold text-xs bg-emerald-500 hover:bg-emerald-600 text-slate-950 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.5)] cursor-pointer";
+          }
+          updateGlobalHUD();
+        }
+      } else {
+        activitiesCompleted.step2 = false;
+        if (btn) {
+          btn.disabled = true;
+          btn.className = "px-5 py-2 rounded font-bold text-xs bg-slate-800 text-slate-500 cursor-not-allowed transition-all duration-300";
+        }
+        updateGlobalHUD();
+      }
+    }
+
+    // ============================================================================
+    // STEP 3 INTERACTIVE EVALUATOR
+    // ============================================================================
+    function checkStep3Completion() {
+      const allCorrect = step3Cards.every(card => card.isPlaced && card.placedInSlot === card.phase);
+      if (allCorrect && !activitiesCompleted.step3) {
+        activitiesCompleted.step3 = true;
+        playSound('success');
+        triggerRewardAnimation(translations[currentLang].step3Success);
+        
+        const btn = document.getElementById('nextBtn3');
+        if (btn) {
+          btn.removeAttribute('disabled');
+          btn.className = "px-5 py-2 rounded font-bold text-xs bg-emerald-500 hover:bg-emerald-600 text-slate-950 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_15px_rgba(16,185,129,0.5)] cursor-pointer";
+        }
+        updateGlobalHUD();
+      }
+    }
+
+    // ============================================================================
+    // STEP 4 INTERACTIVE COUPLING: Just-In-Time (JIT) Kanban Pull Simulator
+    // ============================================================================
+    function triggerKanbanPull() {
+      if (!canvas || currentStep !== 4 || activitiesCompleted.step4) return;
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+
+      playSound('click');
+      // Spawn packet on assembly conveyor
+      step4ConveyorUnits.push({
+        x: w * 0.15,
+        y: h * 0.58,
+        speed: 5.5,
+        targetX: w * 0.48
+      });
+    }
+
+    function updateStep4UI() {
+      const curVal = document.getElementById('jitStreakValue');
+      if (curVal) {
+        curVal.innerText = `${step4Deliveries} / ${step4TargetDeliveries} ${currentLang === 'ENG' ? 'Deliveries' : 'බෙදාහැරීම්'}`;
+      }
+    }
+
+    function triggerJITPenalty(type) {
+      playSound('error');
+      if (type === 'stockout') {
+        step4StockoutTimer = 100;
+      } else {
+        step4OverstockTimer = 100;
+      }
+      
+      // Reset streak parameters to reinforce lean production discipline
+      step4Deliveries = 0;
+      step4Inventory = 0;
+      step4ConveyorUnits = [];
+      step4Customers = [];
+      updateStep4UI();
+    }
+
+    // ============================================================================
+    // HUD PROGRESS BAR SYNCHRONIZER
+    // ============================================================================
+    function updateGlobalHUD() {
+      let completedCount = 0;
+      const setHudColor = (id, complete) => {
+        const el = document.getElementById(id);
+        if (el) el.className = complete ? "w-2.5 h-2.5 rounded-full bg-emerald-500" : "w-2.5 h-2.5 rounded-full bg-red-500";
+      };
+
+      if (activitiesCompleted.step1) completedCount++;
+      setHudColor('hudS1', activitiesCompleted.step1);
+
+      if (activitiesCompleted.step2) completedCount++;
+      setHudColor('hudS2', activitiesCompleted.step2);
+
+      if (activitiesCompleted.step3) completedCount++;
+      setHudColor('hudS3', activitiesCompleted.step3);
+
+      if (activitiesCompleted.step4) completedCount++;
+      setHudColor('hudS4', activitiesCompleted.step4);
+
+      const ratio = (completedCount / 4) * 100;
+      const bar = document.getElementById('globalProgressBar');
+      if (bar) bar.style.width = `${ratio}%`;
+      const txt = document.getElementById('globalProgressPercent');
+      if (txt) txt.innerText = `${Math.round(ratio)}%`;
+    }
+
+    // ============================================================================
+    // HUMAN-COMPUTER INTERACTION EVENT ROUTERS (MOUSE & TOUCH)
+    // ============================================================================
+    function onPointerDown(e) {
+      if (e.cancelable) e.preventDefault();
+      const pos = getPointerPos(e);
+      pointerX = pos.x;
+      pointerY = pos.y;
+
+      if (currentStep === 1) {
+        for (let i = step1Items.length - 1; i >= 0; i--) {
+          const item = step1Items[i];
+          const dist = Math.hypot(pointerX - item.x, pointerY - item.y);
+          if (dist < item.radius) {
+            isDragging = true;
+            dragNode = item;
+            dragOffsetX = pointerX - item.x;
+            dragOffsetY = pointerY - item.y;
+            item.isPlaced = false;
+            item.placedInBay = null;
+            playSound('click');
+            break;
+          }
+        }
+      } 
+      else if (currentStep === 3) {
+        for (let i = step3Cards.length - 1; i >= 0; i--) {
+          const card = step3Cards[i];
+          if (pointerX >= card.x - card.w/2 && pointerX <= card.x + card.w/2 &&
+              pointerY >= card.y - card.h/2 && pointerY <= card.y + card.h/2) {
+            isDragging = true;
+            dragNode = card;
+            dragOffsetX = pointerX - card.x;
+            dragOffsetY = pointerY - card.y;
+            card.isPlaced = false;
+            card.placedInSlot = null;
+            playSound('click');
+            break;
+          }
+        }
+      }
+    }
+
+    function onPointerMove(e) {
+      if (!isDragging || !dragNode) return;
+      if (e.cancelable) e.preventDefault();
+      
+      const pos = getPointerPos(e);
+      pointerX = pos.x;
+      pointerY = pos.y;
+
+      dragNode.x = pointerX - dragOffsetX;
+      dragNode.y = pointerY - dragOffsetY;
+    }
+
+    function onPointerUp(e) {
+      if (!isDragging || !dragNode) return;
+      isDragging = false;
+
+      if (currentStep === 1) {
+        let placed = false;
+        for (const bay of step1Bays) {
+          if (dragNode.x >= bay.x && dragNode.x <= bay.x + bay.w &&
+              dragNode.y >= bay.y && dragNode.y <= bay.y + bay.h) {
+            
+            if (bay.id === dragNode.cat) {
+              dragNode.isPlaced = true;
+              dragNode.placedInBay = bay.id;
+              
+              // Align grid inside target bay
+              const gridIndex = step1Items.filter(item => item.isPlaced && item.placedInBay === bay.id).indexOf(dragNode);
+              const row = Math.floor(gridIndex / 2);
+              const col = gridIndex % 2;
+              
+              dragNode.x = bay.x + (bay.w * 0.3) + (col * (bay.w * 0.4));
+              dragNode.y = bay.y + (bay.h * 0.25) + (row * (bay.h * 0.35));
+              placed = true;
+              playSound('correct');
+            } else {
+              dragNode.shakeTimer = 25;
+              playSound('error');
+            }
+            break;
+          }
+        }
+
+        if (!placed) {
+          animateReturn(dragNode);
+        }
+        checkStep1Completion();
+      } 
+      else if (currentStep === 3) {
+        let placed = false;
+        for (const slot of step3Slots) {
+          const dist = Math.hypot(dragNode.x - slot.x, dragNode.y - slot.y);
+          if (dist < slot.r + 30) {
+            if (slot.phase === dragNode.phase) {
+              dragNode.isPlaced = true;
+              dragNode.placedInSlot = slot.phase;
+              dragNode.x = slot.x;
+              dragNode.y = slot.y + 40; 
+              placed = true;
+              playSound('correct');
+            } else {
+              dragNode.shakeTimer = 25;
+              playSound('error');
+            }
+            break;
+          }
+        }
+
+        if (!placed) {
+          animateReturn(dragNode);
+        }
+        checkStep3Completion();
+      }
+
+      dragNode = null;
+    }
+
+    function animateReturn(node) {
+      let ticks = 0;
+      const totalTicks = 12;
+      const startX = node.x;
+      const startY = node.y;
+      
+      function slide() {
+        if (ticks < totalTicks && !node.isPlaced) {
+          ticks++;
+          const progress = ticks / totalTicks;
+          const ease = 1 - Math.pow(1 - progress, 3); 
+          node.x = startX + (node.origX - startX) * ease;
+          node.y = startY + (node.origY - startY) * ease;
+          requestAnimationFrame(slide);
+        }
+      }
+      slide();
+    }
+
+    // ============================================================================
+    // CELEBRATION PARTICLE GENERATOR
+    // ============================================================================
+    function triggerRewardAnimation(feedbackMessage) {
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+
+      for (let i = 0; i < 40; i++) {
+        successParticles.push({
+          x: w / 2,
+          y: h / 2,
+          vx: (Math.random() - 0.5) * 8,
+          vy: (Math.random() - 0.5) * 8 - 3,
+          radius: Math.random() * 5 + 3,
+          color: `hsl(${140 + Math.random() * 60}, 100%, 50%)`,
+          alpha: 1,
+          decay: Math.random() * 0.015 + 0.015
+        });
+      }
+
+      const overlay = document.getElementById('canvasOverlayFeedback');
+      const text = document.getElementById('canvasFeedbackText');
+      if (text) text.innerText = feedbackMessage;
+      if (overlay) overlay.classList.remove('hidden');
+    }
+
+    function triggerParticles(x, y, color, count) {
+      for (let i = 0; i < count; i++) {
+        successParticles.push({
+          x: x,
+          y: y,
+          vx: (Math.random() - 0.5) * 6,
+          vy: (Math.random() - 0.5) * 6 - 2,
+          radius: Math.random() * 3 + 2,
+          color: color,
+          alpha: 1,
+          decay: Math.random() * 0.02 + 0.02
+        });
+      }
+    }
+
+    // ============================================================================
+    // RENDER PIPELINE ENGINE (60 FPS LOOP)
+    // ============================================================================
+    function runGameLoop() {
+      if (!ctx || !canvas) return;
+      
+      const w = canvas.width / window.devicePixelRatio;
+      const h = canvas.height / window.devicePixelRatio;
+
+      ctx.clearRect(0, 0, w, h);
+      
+      // Premium futuristic space backdrop
+      const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+      bgGrad.addColorStop(0, '#040713');
+      bgGrad.addColorStop(1, '#0c1122');
+      ctx.fillStyle = bgGrad;
+      ctx.fillRect(0, 0, w, h);
+
+      // Render step specific simulations
+      if (currentStep === 1) {
+        drawStep1(w, h);
+      } else if (currentStep === 2) {
+        drawStep2(w, h);
+      } else if (currentStep === 3) {
+        drawStep3(w, h);
+      } else if (currentStep === 4) {
+        drawStep4(w, h);
+      }
+
+      // Update particle physics
+      for (let i = successParticles.length - 1; i >= 0; i--) {
+        const p = successParticles[i];
+        p.x += p.vx;
+        p.y += p.vy;
+        p.vy += 0.05; // Gravity
+        p.alpha -= p.decay;
+
+        ctx.save();
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        if (p.alpha <= 0) {
+          successParticles.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(runGameLoop);
+    }
+
+    // --- DRAW STEP 1: ITO Model ---
+    function drawStep1(w, h) {
+      const labels = translations[currentLang];
+
+      step1Bays.forEach(bay => {
+        ctx.save();
+        ctx.strokeStyle = bay.color;
+        ctx.lineWidth = 2.5;
+        ctx.shadowColor = bay.color;
+        ctx.shadowBlur = 12;
+        
+        drawRoundedRect(ctx, bay.x, bay.y, bay.w, bay.h, 12, false, true);
+        
+        ctx.fillStyle = 'rgba(19, 26, 46, 0.55)';
+        drawRoundedRect(ctx, bay.x, bay.y, bay.w, bay.h, 12, true, false);
+        ctx.restore();
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(
+          bay.id === 'transformed' ? labels.step1BayLeft : labels.step1BayRight,
+          bay.x + bay.w / 2, 
+          bay.y + 24
+        );
+      });
+
+      // Render Resource Pool Container Outline
+      ctx.save();
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 1;
+      ctx.setLineDash([4, 4]);
+      ctx.strokeRect(w * 0.05, h * 0.65, w * 0.90, h * 0.28);
+      ctx.restore();
+
+      ctx.fillStyle = '#475569';
+      ctx.font = '9px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(labels.sortingPool, w / 2, h * 0.61);
+
+      // Draw active draggable objects
+      step1Items.forEach(item => {
+        ctx.save();
+        let shakeOffset = 0;
+        if (item.shakeTimer > 0) {
+          shakeOffset = Math.sin(item.shakeTimer * 0.8) * 4;
+          item.shakeTimer--;
+        }
+
+        const x = item.x + shakeOffset;
+        const y = item.y;
+
+        let nodeColor = '#334155';
+        if (item.isPlaced) {
+          nodeColor = item.cat === 'transformed' ? '#06b6d4' : '#10b981';
+        } else if (item === dragNode) {
+          nodeColor = '#f59e0b';
+        }
+
+        if (item === dragNode) {
+          ctx.shadowColor = '#000';
+          ctx.shadowBlur = 15;
+          ctx.shadowOffsetY = 8;
+        }
+
+        ctx.fillStyle = '#1e293b';
+        ctx.strokeStyle = nodeColor;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(x, y, item.radius, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        // Label Wrapping inside circles
+        ctx.save();
+        ctx.fillStyle = '#f1f5f9';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.textAlign = 'center';
+        const displayName = currentLang === 'ENG' ? item.nameEN : item.nameSI;
+        
+        if (displayName.length > 10 && displayName.includes(' ')) {
+          const parts = displayName.split(' ');
+          ctx.fillText(parts[0], x, y - 2);
+          ctx.fillText(parts[1], x, y + 8);
+        } else {
+          ctx.fillText(displayName, x, y + 3);
+        }
+        ctx.restore();
+      });
+    }
+
+    // --- DRAW STEP 2: Little's Law Conveyor System ---
+    function drawStep2(w, h) {
+      const labels = translations[currentLang];
+
+      // Draw Main Conveyor Track
+      ctx.save();
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 8;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.1, h * 0.58);
+      ctx.lineTo(w * 0.9, h * 0.58);
+      ctx.stroke();
+
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      ctx.setLineDash([4, 12]);
+      ctx.beginPath();
+      ctx.moveTo(w * 0.1, h * 0.58);
+      ctx.lineTo(w * 0.9, h * 0.58);
+      ctx.stroke();
+      ctx.restore();
+
+      // Spawn conveyor particles proportional to arrival rate
+      if (Math.random() * 60 < step2ArrivalRate) {
+        step2ConveyorParticles.push({
+          x: w * 0.1,
+          y: h * 0.58,
+          targetStationIndex: 0,
+          speed: 2 + Math.random() * 1.5,
+          color: '#06b6d4'
+        });
+      }
+
+      let queueCounts = [0, 0, 0];
+
+      // Process Flow Movements
+      for (let i = step2ConveyorParticles.length - 1; i >= 0; i--) {
+        const p = step2ConveyorParticles[i];
+        const targetStation = step2Stations[p.targetStationIndex];
+
+        if (!targetStation) {
+          p.x += p.speed;
+          if (p.x > w) step2ConveyorParticles.splice(i, 1);
+          continue;
+        }
+
+        const stopThreshold = targetStation.x - (queueCounts[p.targetStationIndex] * 8);
+
+        if (p.x < stopThreshold) {
+          p.x += p.speed;
+        } else {
+          queueCounts[p.targetStationIndex]++;
+          
+          if (Math.random() * 200 < targetStation.capacity) {
+            p.targetStationIndex++;
+            p.x += 10; 
+          }
+        }
+      }
+
+      // Draw Workstations
+      step2Stations.forEach((st, idx) => {
+        const isB = (st.id === 'sewing');
+        const bottleneck = (step2ArrivalRate > st.capacity);
+        const utilization = step2ArrivalRate / st.capacity;
+
+        let borderGlowColor = '#475569';
+        let feedbackLabelText = '';
+        if (bottleneck) {
+          borderGlowColor = '#ef4444'; 
+          feedbackLabelText = labels.bottleneckAlert;
+        } else if (isB && activitiesCompleted.step2) {
+          borderGlowColor = '#10b981'; 
+          feedbackLabelText = labels.optimalFlow;
+        }
+
+        ctx.save();
+        ctx.strokeStyle = borderGlowColor;
+        ctx.lineWidth = 3;
+        if (bottleneck) {
+          ctx.shadowColor = '#ef4444';
+          ctx.shadowBlur = Math.abs(Math.sin(Date.now() / 100)) * 15;
+        } else if (isB && activitiesCompleted.step2) {
+          ctx.shadowColor = '#10b981';
+          ctx.shadowBlur = 10;
+        }
+        
+        ctx.fillStyle = '#111827';
+        drawRoundedRect(ctx, st.x - st.w / 2, st.y - st.h / 2, st.w, st.h, 8, true, true);
+        ctx.restore();
+
+        ctx.fillStyle = '#f8fafc';
+        ctx.font = 'bold 9.5px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(idx === 0 ? labels.stationALabel : (idx === 1 ? `${labels.stationBLabel} (${st.capacity}/hr)` : labels.stationCLabel), st.x, st.y - 12);
+
+        const utilPercent = Math.round(utilization * 100);
+        ctx.fillStyle = bottleneck ? '#ef4444' : '#10b981';
+        ctx.font = 'mono bold 9px sans-serif';
+        ctx.fillText(`${labels.utilizationLabel}: ${utilPercent}%`, st.x, st.y + 10);
+
+        if (feedbackLabelText !== '') {
+          ctx.fillStyle = bottleneck ? '#ef4444' : '#10b981';
+          ctx.font = 'bold 7.5px sans-serif';
+          ctx.fillText(feedbackLabelText, st.x, st.y + 24);
+        }
+
+        // Draw physical queues stacked behind workstation entrance
+        for (let q = 0; q < Math.min(queueCounts[idx], 8); q++) {
+          ctx.save();
+          ctx.fillStyle = '#f59e0b';
+          ctx.beginPath();
+          ctx.arc(st.x - st.w/2 - 10 - (q * 8), st.y, 3.5, 0, Math.PI*2);
+          ctx.fill();
+          ctx.restore();
+        }
+      });
+
+      // Draw Conveyor Flow Particles
+      step2ConveyorParticles.forEach(p => {
+        ctx.save();
+        ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+      });
+    }
+
+    // --- DRAW STEP 3: Deming PDCA Improvement Cycle ---
+    function drawStep3(w, h) {
+      const labels = translations[currentLang];
+
+      ctx.save();
+      ctx.strokeStyle = '#1e293b';
+      ctx.lineWidth = 4;
+      ctx.beginPath();
+      ctx.moveTo(w * 0.15, h * 0.35);
+      ctx.lineTo(w * 0.85, h * 0.35);
+      ctx.stroke();
+      ctx.restore();
+
+      step3Slots.forEach(slot => {
+        ctx.save();
+        ctx.strokeStyle = '#334155';
+        ctx.lineWidth = 2;
+        ctx.setLineDash([4, 4]);
+        ctx.fillStyle = '#111827';
+        
+        ctx.beginPath();
+        ctx.arc(slot.x, slot.y, slot.r, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+        ctx.restore();
+
+        ctx.fillStyle = '#94a3b8';
+        ctx.font = 'bold 9px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(currentLang === 'ENG' ? slot.nameEN : slot.nameSI, slot.x, slot.y - 45);
+      });
+
+      step3Cards.forEach(card => {
+        ctx.save();
+        let shakeOffset = 0;
+        if (card.shakeTimer > 0) {
+          shakeOffset = Math.sin(card.shakeTimer * 0.8) * 4;
+          card.shakeTimer--;
+        }
+
+        const x = card.x + shakeOffset;
+        const y = card.y;
+
+        let strokeColor = '#475569';
+        if (card.isPlaced) {
+          strokeColor = '#10b981';
+        } else if (card === dragNode) {
+          strokeColor = '#06b6d4';
+        }
+
+        ctx.fillStyle = '#1e293b';
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = 2;
+        drawRoundedRect(ctx, x - card.w / 2, y - card.h / 2, card.w, card.h, 6, true, true);
+        ctx.restore();
+
+        ctx.save();
+        ctx.fillStyle = '#f1f5f9';
+        ctx.font = 'bold 8.5px sans-serif';
+        ctx.textAlign = 'center';
+        
+        const displayTxt = currentLang === 'ENG' ? card.textEN : card.textSI;
+        wrapText(ctx, displayTxt, x, y, card.w * 0.9, 12);
+        ctx.restore();
+      });
+    }
+
+    // --- DRAW STEP 4: INTERACTIVE JIT CONVEYOR PULL GAME ---
+    function drawStep4(w, h) {
+      // 1. Draw Assembly Factory (Left)
+      ctx.save();
+      ctx.fillStyle = '#1e293b';
+      ctx.strokeStyle = '#334155';
+      ctx.lineWidth = 2;
+      drawRoundedRect(ctx, w * 0.05, h * 0.35, w * 0.22, h * 0.42, 8, true, true);
+      
+      ctx.fillStyle = '#94a3b8';
+      ctx.font = 'bold 9px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(currentLang === 'ENG' ? "JIT Factory" : "JIT කර්මාන්තශාලාව", w * 0.16, h * 0.42);
+      ctx.restore();
+
+      // Pulsing Indicator Light
+      ctx.save();
+      ctx.fillStyle = step4ConveyorUnits.length > 0 ? '#06b6d4' : '#475569';
+      ctx.shadowColor = '#06b6d4';
+      ctx.shadowBlur = step4ConveyorUnits.length > 0 ? 10 : 0;
+      ctx.beginPath();
+      ctx.arc(w * 0.16, h * 0.48, 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+
+      // 2. Draw Warehouse Lean Shelf (Center Stack - max 5 capacity)
+      ctx.save();
+      ctx.fillStyle = '#111827';
+      ctx.strokeStyle = '#06b6d4';
+      ctx.lineWidth = 2.5;
+      ctx.shadowColor = '#06b6d4';
+      ctx.shadowBlur = 6;
+      drawRoundedRect(ctx, w * 0.40, h * 0.35, w * 0.20, h * 0.42, 8, true, true);
+      ctx.restore();
+
+      ctx.save();
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 9px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(currentLang === 'ENG' ? "Lean Zone (Max 5)" : "ගබඩා රාක්කය (උපරිම 5)", w * 0.50, h * 0.42);
+      ctx.restore();
+
+      // Warehouse slots representation
+      for (let s = 0; s < step4MaxInventory; s++) {
+        const slotX = w * 0.43 + (s % 3) * (w * 0.05);
+        const slotY = h * 0.65 - Math.floor(s / 3) * (h * 0.12);
+        
+        ctx.save();
+        ctx.strokeStyle = '#1e293b';
+        ctx.lineWidth = 1;
+        ctx.strokeRect(slotX, slotY, w * 0.04, h * 0.08);
+        ctx.restore();
+
+        // Draw physical storage boxes matching current inventory
+        if (s < step4Inventory) {
+          ctx.save();
+          ctx.fillStyle = '#06b6d4';
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 1;
+          drawRoundedRect(ctx, slotX + 2, slotY + 2, w * 0.04 - 4, h * 0.08 - 4, 3, true, true);
+          ctx.restore();
+        }
+      }
+
+      // 3. Draw Retail Checkout Gate (Right)
+      ctx.save();
+      ctx.fillStyle = '#111827';
+      ctx.strokeStyle = '#10b981';
+      ctx.lineWidth = 2.5;
+      drawRoundedRect(ctx, w * 0.73, h * 0.35, w * 0.22, h * 0.42, 8, true, true);
+      
+      ctx.fillStyle = '#e2e8f0';
+      ctx.font = 'bold 9px sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(currentLang === 'ENG' ? "Retail Gate" : "ඇණවුම් අංශය", w * 0.84, h * 0.42);
+      ctx.restore();
+
+      // 4. Update and Draw active conveyor packages
+      for (let i = step4ConveyorUnits.length - 1; i >= 0; i--) {
+        const p = step4ConveyorUnits[i];
+        p.x += p.speed;
+
+        // Visual pack
+        ctx.save();
+        ctx.fillStyle = '#f59e0b';
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1;
+        drawRoundedRect(ctx, p.x, p.y, w * 0.03, h * 0.06, 3, true, true);
+        ctx.restore();
+
+        if (p.x >= p.targetX) {
+          step4ConveyorUnits.splice(i, 1);
+          step4Inventory++;
+          
+          // MUDA LIMIT BREACH (Carrying waste!)
+          if (step4Inventory > step4MaxInventory) {
+            triggerJITPenalty('overstock');
+          }
+        }
+      }
+
+      // 5. Spawn and Update Shoppers arriving to retrieve goods
+      step4CustomerSpawnTimer++;
+      if (step4CustomerSpawnTimer > 180 && !activitiesCompleted.step4) { // Roughly every 3 seconds
+        step4CustomerSpawnTimer = 0;
+        step4Customers.push({
+          x: w * 0.95,
+          y: h * 0.58,
+          speed: 1.8,
+          targetX: w * 0.78,
+          status: 'walking', // 'walking', 'waiting', 'done'
+          waitTimer: 100 // frames of patience
+        });
+      }
+
+      for (let c = step4Customers.length - 1; c >= 0; c--) {
+        const cust = step4Customers[c];
+        
+        if (cust.status === 'walking') {
+          cust.x -= cust.speed;
+          if (cust.x <= cust.targetX) {
+            cust.status = 'waiting';
+          }
+        } else if (cust.status === 'waiting') {
+          cust.waitTimer--;
+          
+          // Draw patience ring above head
+          ctx.save();
+          ctx.strokeStyle = '#ef4444';
+          ctx.lineWidth = 2.5;
+          ctx.beginPath();
+          ctx.arc(cust.x + 10, cust.y - 15, 8, 0, (cust.waitTimer / 100) * Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+
+          // Inventory exchange transactions
+          if (step4Inventory > 0) {
+            step4Inventory--;
+            cust.status = 'done';
+            step4Deliveries++;
+            updateStep4UI();
+            triggerParticles(cust.x, cust.y, '#10b981', 12);
+            playSound('correct');
+            
+            // Evaluates win completion
+            if (step4Deliveries >= step4TargetDeliveries) {
+              activitiesCompleted.step4 = true;
+              playSound('success');
+              triggerRewardAnimation(translations[currentLang].step4Success);
+              const btn = document.getElementById('nextBtn4');
+              if (btn) {
+                btn.removeAttribute('disabled');
+                btn.className = "px-5 py-2 rounded font-bold text-xs bg-amber-500 hover:bg-amber-600 text-slate-950 transition-all duration-300 hover:scale-105 active:scale-95 shadow-[0_0_20px_rgba(245,158,11,0.6)] cursor-pointer flex items-center gap-1.5";
+              }
+              updateGlobalHUD();
+            }
+          } else if (cust.waitTimer <= 0) {
+            // Patience expired -> Stockout!
+            triggerJITPenalty('stockout');
+            step4Customers.splice(c, 1);
+            continue;
+          }
+        } else if (cust.status === 'done') {
+          cust.x -= cust.speed * 1.5; // Walking away happy
+          if (cust.x < w * 0.3) {
+            step4Customers.splice(c, 1);
+            continue;
+          }
+        }
+
+        // Draw customer emoji
+        ctx.save();
+        ctx.font = '20px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(cust.status === 'done' ? '😊' : '👤', cust.x + 10, cust.y + 12);
+        ctx.restore();
+      }
+
+      // Visual Alerts for penalties
+      if (step4StockoutTimer > 0) {
+        step4StockoutTimer--;
+        ctx.save();
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.9)';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("STOCKOUT PENALTY! (Customers left empty-handed!)", w/2, h * 0.22);
+        ctx.restore();
+      }
+
+      if (step4OverstockTimer > 0) {
+        step4OverstockTimer--;
+        ctx.save();
+        ctx.fillStyle = 'rgba(239, 68, 68, 0.9)';
+        ctx.font = 'bold 12px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText("EXCESS MUDA! (Shelf capacity blown (>5 units)! High Carrying Costs)", w/2, h * 0.22);
+        ctx.restore();
+      }
+    }
+
+    // ============================================================================
+    // THE PROFESSIONAL MASTERY BADGE INTERFACES & OUTPUT DRAWER
+    // ============================================================================
+    function displayProfessionalBadge() {
+      // Safety check: ensure all 4 are actually done
+      if (!activitiesCompleted.step1 || !activitiesCompleted.step2 || !activitiesCompleted.step3 || !activitiesCompleted.step4) {
+        playSound('error');
+        return;
+      }
+      playSound('success');
+      const modal = document.getElementById('badgeOverlayModal');
+      if (modal) {
+        modal.classList.remove('opacity-0', 'pointer-events-none');
+        modal.classList.add('opacity-100');
+      }
+    }
+
+    function closeBadgeModal() {
+      playSound('click');
+      const modal = document.getElementById('badgeOverlayModal');
+      if (modal) {
+        modal.classList.remove('opacity-100');
+        modal.classList.add('opacity-0', 'pointer-events-none');
+      }
+    }
+
+    function printBadgePlaque() {
+      const studentNameInput = document.getElementById('badgeStudentName');
+      if (studentNameInput && studentNameInput.value.trim() === "") {
+        studentNameInput.focus();
+        studentNameInput.style.borderColor = "#f59e0b";
+        playSound('error');
+        return;
+      }
+      playSound('success');
+      
+      const printWindow = window.open('', '', 'height=600,width=800');
+      printWindow.document.write('<html><head><title>OBISL JIT Mastery Badge</title>');
+      printWindow.document.write('<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Space+Grotesk&display=swap" rel="stylesheet">');
+      printWindow.document.write('<style>');
+      printWindow.document.write('body { background-color: #050814; color: #fff; font-family: sans-serif; text-align: center; padding: 40px; }');
+      printWindow.document.write('.badge-box { border: 4px double #f59e0b; padding: 40px; border-radius: 12px; max-width: 600px; margin: 0 auto; background-color: #0b1021; box-shadow: 0 0 30px rgba(245, 158, 11, 0.3); }');
+      printWindow.document.write('h1 { font-family: "Cinzel", serif; color: #fbbf24; margin-bottom: 5px; font-size: 24px; letter-spacing: 2px; }');
+      printWindow.document.write('h2 { font-family: "Space Grotesk", sans-serif; color: #06b6d4; font-size: 20px; margin: 15px 0; }');
+      printWindow.document.write('.name { font-size: 24px; font-weight: bold; border-bottom: 2px solid #fbbf24; display: inline-block; padding: 5px 30px; margin: 25px 0; color: #fff; }');
+      printWindow.document.write('p { font-size: 13px; color: #cbd5e1; max-width: 480px; margin: 0 auto 30px auto; line-height: 1.6; }');
+      printWindow.document.write('.footer { display: flex; justify-content: space-between; margin-top: 40px; border-top: 1px solid #1e293b; padding-top: 20px; }');
+      printWindow.document.write('.sig-block { text-align: left; font-size: 11px; color: #94a3b8; }');
+      printWindow.document.write('.sig-author { font-family: "Cinzel", serif; color: #fbbf24; font-weight: bold; }');
+      printWindow.document.write('</style></head><body>');
+      printWindow.document.write('<div class="badge-box">');
+      printWindow.document.write('<h1>OBISL OPERATIONS MASTERY BADGE</h1>');
+      printWindow.document.write('<p style="letter-spacing: 2px; text-transform: uppercase; font-size: 10px; color: #94a3b8;">Ocean Bridge Institute of Strategic Leadership</p>');
+      printWindow.document.write('<div class="name">' + (studentNameInput ? studentNameInput.value : "") + '</div>');
+      printWindow.document.write('<h2>MODULE 5: OPERATIONS MANAGEMENT</h2>');
+      printWindow.document.write('<p>is hereby awarded this Digital Professional Mastery Badge for demonstrating core operational competence in line balance modeling, Deming PDCA integration, and JIT Kanban Pull network operations under the CBMS framework.</p>');
+      printWindow.document.write('<div class="footer">');
+      printWindow.document.write('<div class="sig-block">Verification Code:<br><b>OB-OM5-MSTR</b></div>');
+      printWindow.document.write('<div class="sig-block" style="text-align: right;"><span class="sig-author">Michael Ranuka Gamage</span><br>Academic Head / Director</div>');
+      printWindow.document.write('</div>');
+      printWindow.document.write('</div>');
+      printWindow.document.write('</body></html>');
+      
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500);
+    }
+
+    // ============================================================================
+    // UTILITY DRAWING HELPERS
+    // ============================================================================
+    function drawRoundedRect(ctx, x, y, w, h, r, fill, stroke) {
+      ctx.beginPath();
+      ctx.moveTo(x + r, y);
+      ctx.lineTo(x + w - r, y);
+      ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+      ctx.lineTo(x + w, y + h - r);
+      ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+      ctx.lineTo(x + r, y + h);
+      ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+      ctx.lineTo(x, y + r);
+      ctx.quadraticCurveTo(x, y, x + r, y);
+      ctx.closePath();
+      if (fill) ctx.fill();
+      if (stroke) ctx.stroke();
+    }
+
+    function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      const words = text.split(' ');
+      let line = '';
+      let lines = [];
+
+      for (let n = 0; n < words.length; n++) {
+        let testLine = line + words[n] + ' ';
+        let metrics = ctx.measureText(testLine);
+        let testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+          lines.push(line);
+          line = words[n] + ' ';
+        } else {
+          line = testLine;
+        }
+      }
+      lines.push(line);
+
+      const startY = y - ((lines.length - 1) * lineHeight) / 2;
+      for (let k = 0; k < lines.length; k++) {
+        ctx.fillText(lines[k], x, startY + (k * lineHeight));
+      }
+    }
+
+    // ============================================================================
+    // INITIALIZATION ROOT TRIGGER
+    // ============================================================================
+    window.onload = function () {
+      canvas = document.getElementById('gameCanvas');
+      if (canvas) {
+        ctx = canvas.getContext('2d');
+        
+        // Add responsive and input bindings
+        window.addEventListener('resize', resizeCanvas);
+        
+        canvas.addEventListener('mousedown', onPointerDown);
+        canvas.addEventListener('mousemove', onPointerMove);
+        canvas.addEventListener('mouseup', onPointerUp);
+
+        canvas.addEventListener('touchstart', onPointerDown);
+        canvas.addEventListener('touchmove', onPointerMove);
+        canvas.addEventListener('touchend', onPointerUp);
+
+        resizeCanvas();
+        runGameLoop();
+        toggleLanguage(); // Initializes text bindings safely
+      }
+    };
+  </script>
+</body>
+</html>
